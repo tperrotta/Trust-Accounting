@@ -18,90 +18,67 @@
   }
   *{box-sizing:border-box}
   html,body{height:100%}
-  body{
-    margin:0; background:var(--bg); color:var(--ink); font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;
-  }
-  .container{max-width:1100px; margin:0 auto; padding:18px 20px 40px}
-  header{
-    position:sticky; top:0; backdrop-filter:saturate(180%) blur(10px);
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
+  .container{max-width:1100px;margin:0 auto;padding:18px 20px 40px}
+  header{position:sticky;top:0;backdrop-filter:saturate(180%) blur(10px);
     background:linear-gradient(180deg, rgba(255,255,255,.75), rgba(255,255,255,.55)), var(--bg);
-    border-bottom:1px solid var(--border); z-index:3;
-  }
-  [data-theme="dark"] header{
-    background:linear-gradient(180deg, rgba(17,22,43,.92), rgba(17,22,43,.7)), var(--bg);
-  }
-  .bar{max-width:1100px; margin:0 auto; padding:12px 20px; display:flex; gap:14px; align-items:center}
-  .logo{
-    display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.2px;
-  }
-  .logo svg{width:28px; height:28px}
+    border-bottom:1px solid var(--border);z-index:3}
+  [data-theme="dark"] header{background:linear-gradient(180deg, rgba(17,22,43,.92), rgba(17,22,43,.7)), var(--bg)}
+  .bar{max-width:1100px;margin:0 auto;padding:12px 20px;display:flex;gap:14px;align-items:center}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.2px}
+  .logo svg{width:28px;height:28px}
   .spacer{flex:1}
-  .btn, .chip{
-    padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:var(--panel); color:var(--ink); cursor:pointer;
-  }
-  .btn.primary{background:var(--accent); color:var(--accent-ink); border-color:transparent}
-  .btn.icon{display:inline-flex; align-items:center; gap:8px}
-  .chip{font-size:.9rem; color:var(--muted); background:transparent}
+  .btn,.chip{padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--panel);color:var(--ink);cursor:pointer}
+  .btn.primary{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+  .btn.icon{display:inline-flex;align-items:center;gap:8px}
+  .chip{font-size:.9rem;color:var(--muted);background:transparent}
   main{margin-top:16px}
-  .card{
-    background:var(--panel); border:1px solid var(--border); border-radius:14px; box-shadow:var(--shadow); padding:16px; margin-bottom:16px;
-  }
-  h1{font-size:1.35rem; margin:8px 0 6px}
-  h2{font-size:1.05rem; margin:0 0 10px}
-  .sub{color:var(--muted); font-size:.95rem; margin-bottom:10px}
-  .row{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
-  label{font-size:.9rem; color:var(--muted)}
-  input, textarea, select{
-    width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:var(--panel); color:var(--ink); outline:none;
-  }
-  input:focus, textarea:focus{border-color:var(--accent); box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent)}
-  .inline{display:grid; grid-template-columns:repeat(3,minmax(180px,1fr)); gap:12px}
-  @media (max-width:880px){ .inline{grid-template-columns:1fr} }
-  .tabs{display:flex; gap:8px; margin:6px 0 12px}
-  .tab{padding:8px 12px; border-radius:10px; border:1px solid var(--border); background:var(--row); cursor:pointer; color:var(--muted)}
-  .tab.active{background:var(--calc); color:var(--ink); border-color:var(--accent)}
-  table{width:100%; border-collapse:separate; border-spacing:0}
-  thead th{
-    position:sticky; top:66px; z-index:2;
-    background:var(--panel); border-bottom:1px solid var(--border); color:var(--muted); font-weight:600; text-align:left; padding:10px 10px;
-  }
-  tbody td{padding:8px 10px; border-bottom:1px solid var(--border)}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:16px;margin-bottom:16px}
+  h1{font-size:1.35rem;margin:8px 0 6px}
+  h2{font-size:1.05rem;margin:0 0 10px}
+  .sub{color:var(--muted);font-size:.95rem;margin-bottom:10px}
+  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  label{font-size:.9rem;color:var(--muted)}
+  input,textarea,select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--panel);color:var(--ink);outline:none}
+  input:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent)}
+  .inline{display:grid;grid-template-columns:repeat(3,minmax(180px,1fr));gap:12px}
+  @media (max-width:880px){.inline{grid-template-columns:1fr}}
+  .tabs{display:flex;gap:8px;margin:6px 0 12px}
+  .tab{padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:var(--row);cursor:pointer;color:var(--muted)}
+  .tab.active{background:var(--calc);color:var(--ink);border-color:var(--accent)}
+  table{width:100%;border-collapse:separate;border-spacing:0}
+  thead th{position:sticky;top:66px;z-index:2;background:var(--panel);border-bottom:1px solid var(--border);color:var(--muted);font-weight:600;text-align:left;padding:10px}
+  tbody td{padding:8px 10px;border-bottom:1px solid var(--border)}
   tbody tr:nth-child(odd){background:var(--row)}
   tbody tr:nth-child(even){background:var(--row-alt)}
   td.num{text-align:right}
-  tfoot td{padding:10px; font-weight:700; background:var(--calc); border-top:1px solid var(--border)}
-  .help{font-size:.9rem; color:var(--muted)}
+  tfoot td{padding:10px;font-weight:700;background:var(--calc);border-top:1px solid var(--border)}
+  .help{font-size:.9rem;color:var(--muted)}
   .right{margin-left:auto}
-  .badge{display:inline-block; padding:4px 8px; border-radius:8px; font-weight:700}
-  .ok{background:color-mix(in srgb, var(--good) 18%, transparent); color:var(--good)}
-  .err{background:color-mix(in srgb, var(--bad) 18%, transparent); color:var(--bad)}
-  .tools{display:flex; gap:8px; flex-wrap:wrap}
-  .ghost{opacity:.6; font-style:italic}
-  .empty{
-    border:1px dashed var(--border); border-radius:12px; padding:16px; text-align:center; color:var(--muted); background:color-mix(in srgb, var(--calc) 35%, transparent);
-  }
-  .toast{
-    position:fixed; bottom:18px; right:18px; background:var(--panel); border:1px solid var(--border); box-shadow:var(--shadow);
-    padding:12px 14px; border-radius:10px; opacity:0; transform:translateY(8px); transition:all .25s ease; z-index:5;
-  }
-  .toast.show{opacity:1; transform:translateY(0)}
-  .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; background:var(--row); border:1px solid var(--border); border-radius:6px; padding:2px 6px; font-size:.85rem}
-  .foot{color:var(--muted); font-size:.9rem}
+  .badge{display:inline-block;padding:4px 8px;border-radius:8px;font-weight:700}
+  .ok{background:color-mix(in srgb, var(--good) 18%, transparent);color:var(--good)}
+  .err{background:color-mix(in srgb, var(--bad) 18%, transparent);color:var(--bad)}
+  .tools{display:flex;gap:8px;flex-wrap:wrap}
+  .empty{border:1px dashed var(--border);border-radius:12px;padding:16px;text-align:center;color:var(--muted);background:color-mix(in srgb, var(--calc) 35%, transparent)}
+  .toast{position:fixed;bottom:18px;right:18px;background:var(--panel);border:1px solid var(--border);box-shadow:var(--shadow);
+    padding:12px 14px;border-radius:10px;opacity:0;transform:translateY(8px);transition:all .25s ease;z-index:5}
+  .toast.show{opacity:1;transform:translateY(0)}
+  .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--row);border:1px solid var(--border);border-radius:6px;padding:2px 6px;font-size:.85rem}
+  .foot{color:var(--muted);font-size:.9rem}
 </style>
 </head>
 <body>
 <header>
   <div class="bar">
     <div class="logo" title="Trust Accounting">
-      <!-- simple ledger icon -->
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" xmlns="http://www.w3.org/2000/svg">
-        <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor"/><path d="M7 8h10M7 12h10M7 16h6"/>
+        <rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/>
       </svg>
       <span>Trust Account Ledger</span>
     </div>
     <span class="spacer"></span>
     <button id="theme" class="btn icon" title="Toggle theme" aria-label="Toggle theme">
-      <svg id="sun" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zm10.48 0l1.8-1.79 1.41 1.41-1.79 1.8-1.42-1.42zM12 4V1h-0v3h0zm0 19v-3h0v3h0zM4 12H1v0h3v0zm19 0h-3v0h3v0zM6.76 19.16l-1.42 1.42-1.79-1.8 1.41-1.41 1.8 1.79zm10.48 0l1.42 1.42 1.79-1.8-1.41-1.41-1.8 1.79zM12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
+      <svg id="sun" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zm10.48 0l1.8-1.79 1.41 1.41-1.79 1.8-1.42-1.42zM12 4V1h0v3zm0 19v-3h0zM4 12H1v0h3zm19 0h-3v0h3zM6.76 19.16l-1.42 1.42-1.79-1.8 1.41-1.41 1.8 1.79zm10.48 0l1.42 1.42 1.79-1.8-1.41-1.41-1.8 1.79zM12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
       <svg id="moon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
       Theme
     </button>
@@ -235,6 +212,12 @@
     empty: $('#emptyState'), toast: $('#toast')
   };
 
+  function toast(msg){
+    UI.toast.textContent = msg;
+    UI.toast.classList.add('show');
+    clearTimeout(window._t); window._t = setTimeout(()=>UI.toast.classList.remove('show'), 900);
+  }
+
   /* ---------- persistence ---------- */
   function save(){
     const rows = $$('#tbl tbody tr').map(tr => {
@@ -294,16 +277,12 @@
       <td><textarea rows="1" placeholder="Notes">${data.notes||''}</textarea></td>
       <td><button class="btn" title="Delete row" aria-label="Delete">✕</button></td>`;
     UI.tbody.appendChild(tr);
-
     tr.addEventListener('input', recalc);
     tr.querySelector('button').addEventListener('click', () => { tr.remove(); recalc(); });
-
     updateEmpty();
   }
 
-  function updateEmpty(){
-    UI.empty.hidden = UI.tbody.children.length > 0;
-  }
+  function updateEmpty(){ UI.empty.hidden = UI.tbody.children.length > 0; }
 
   function recalc(){
     let bal = 0, tDeb = 0, tCred = 0;
@@ -339,7 +318,6 @@
     UI.diffBadge.className = 'badge ' + (Math.abs(diff) < 0.005 ? 'ok' : 'err');
 
     updateEmpty();
-    // debounce toast
     clearTimeout(window._saveTimer);
     window._saveTimer = setTimeout(save, 250);
   }
@@ -347,7 +325,10 @@
   /* ---------- export ---------- */
   function exportCsv(){
     const rows = [
-      ['Property', UI.prop.value], ['Owner', UI.owner.value], ['Period', UI.month.value], [],
+      ['Property', UI.prop.value],
+      ['Owner', UI.owner.value],
+      ['Period', UI.month.value],
+      [],
       ['Date','Description','Reference','Debit','Credit','Balance','Notes']
     ];
     let bal = 0;
@@ -355,11 +336,75 @@
       const [date,desc,ref,deb,cred,balCell,notes] = tr.querySelectorAll('input, .bal, textarea');
       const d = num(deb.value), c = num(cred.value);
       bal = (idx===0 && c>0 && d===0) ? c : bal - d + c;
-      rows.push([date.value, desc.value, ref.value, d||'', c||'', bal, notes.value]);
+      rows.push([date.value, desc.value, ref.value, d || '', c || '', bal, notes.value]);
     });
     rows.push([], ['Reconciliation'],
       ['Bank statement balance', num(UI.bankBal.value)],
       ['Outstanding deposits', num(UI.outDep.value)],
       ['Outstanding checks', num(UI.outChk.value)],
-      ['Adjusted bank balance', num(UI.bankBal.value)+num(UI.outDep.value)-num(UI.out
+      ['Adjusted bank balance', num(UI.bankBal.value) + num(UI.outDep.value) - num(UI.outChk.value)],
+      ['Ledger total', parseFloat((UI.moEnd.textContent || '').replace(/[^0-9.-]/g,'')) || 0],
+      ['Difference', (num(UI.bankBal.value) + num(UI.outDep.value) - num(UI.outChk.value)) - (parseFloat((UI.moEnd.textContent || '').replace(/[^0-9.-]/g,'')) || 0)]
+    );
+    const csv = rows.map(r => r.map(v => {
+      const val = (v===null||v===undefined) ? '' : String(v);
+      return /[",\n]/.test(val) ? `"${val.replace(/"/g,'""')}"` : val;
+    }).join(',')).join('\n');
+    const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'trust_ledger.csv';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  /* ---------- tabs, theme, events ---------- */
+  $$('.tab').forEach(t => t.addEventListener('click', () => {
+    $$('.tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    const name = t.dataset.tab;
+    document.querySelectorAll('section.card[hidden], section.card:not([hidden])').forEach(()=>{});
+    document.getElementById('ledger').hidden = name !== 'ledger';
+    document.getElementById('recon').hidden = name !== 'recon';
+    document.getElementById('overview').hidden = name !== 'overview';
+  }));
+
+  document.getElementById('addRow').addEventListener('click', () => { addRow({}); recalc(); });
+  document.getElementById('exportCsv').addEventListener('click', exportCsv);
+  document.getElementById('resetAll').addEventListener('click', () => {
+    if(!confirm('Clear all data? This will remove local entries.')) return;
+    localStorage.removeItem('trust_ledger_v1'); seed();
+  });
+  ['prop','owner','month','bankBal','outDep','outChk'].forEach(id => {
+    document.getElementById(id).addEventListener('input', recalc);
+  });
+
+  // theme toggle
+  const root = document.documentElement;
+  const savedTheme = localStorage.getItem('trust_theme');
+  if(savedTheme) root.setAttribute('data-theme', savedTheme);
+  function applyTheme(){
+    const isDark = root.getAttribute('data-theme') === 'dark';
+    document.getElementById('sun').style.display = isDark ? 'none' : '';
+    document.getElementById('moon').style.display = isDark ? '' : 'none';
+  }
+  applyTheme();
+  document.getElementById('theme').addEventListener('click', () => {
+    const now = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', now);
+    localStorage.setItem('trust_theme', now);
+    applyTheme();
+  });
+
+  // keyboard save hint
+  document.addEventListener('keydown', (e) => {
+    if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's'){ e.preventDefault(); save(); }
+  });
+
+  // init
+  load();
+</script>
+</body>
+</html>
+
 
