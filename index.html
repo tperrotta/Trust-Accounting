@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Trust Account Ledger</title>
+<style>
+  :root{--bg:#0b1020;--panel:#141a2e;--muted:#a6b0cf;--text:#e7eaf6;--border:rgba(255,255,255,.08);--good:#1b5730;--bad:#5a1e1e}
+  html,body{height:100%}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif}
+  .wrap{max-width:1100px;margin:0 auto;padding:22px}
+  h1{margin:8px 0 14px;font-size:1.35rem}
+  .tabs{display:flex;gap:10px;margin:8px 0 14px}
+  .tab{padding:8px 12px;border:1px solid var(--border);border-radius:10px;background:#101634;cursor:pointer}
+  .tab.active{background:#1a2250}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px}
+  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  label{font-size:.9rem;color:#cfd7ff}
+  input,textarea,button{padding:9px 10px;border-radius:10px;border:1px solid var(--border);background:#101634;color:var(--text);outline:none}
+  input:focus{border-color:#365cff;box-shadow:0 0 0 3px rgba(54,92,255,.25)}
+  table{width:100%;border-collapse:collapse;font-size:.95rem}
+  th,td{border-bottom:1px solid var(--border);padding:8px 10px;text-align:left}
+  th{color:#cfd7f6;font-weight:600;background:#121838}
+  td.num{text-align:right}
+  .pill{display:inline-block;padding:4px 10px;border-radius:999px;background:#101634;border:1px solid var(--border);font-size:.85rem}
+  .badge{display:inline-block;padding:4px 8px;border-radius:8px}
+  .ok{background:var(--good)}.err{background:var(--bad)}
+  .note{color:#cbd3ff;font-size:.9rem}
+  .right{margin-left:auto}
+  .total{background:#101634}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:900px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Trust Account Ledger</h1>
+  <div class="tabs">
+    <button class="tab active" data-tab="ledger">Property Ledger</button>
+    <button class="tab" data-tab="recon">Reconciliation</button>
+    <button class="tab" data-tab="overview">Master Overview</button>
+    <span class="pill right">data saves locally</span>
+  </div>
+
+  <section id="ledger" class="panel">
+    <div class="row" style="margin-bottom:8px">
+      <div class="row">
+        <label>Property <input id="prop" placeholder="123 Main St, San Diego" /></label>
+        <label>Owner <input id="owner" placeholder="Smith Holdings LLC" /></label>
+        <label>Month <input id="month" type="month" /></label>
+      </div>
+      <div class="right row">
+        <button id="addRow">Add row</button>
+        <button id="exportCsv">Export CSV</button>
+        <button id="resetAll">Clear All</button>
+      </div>
+    </div>
+
+    <table id="tbl">
+      <thead>
+        <tr>
+          <th style="width:120px">Date</th>
+          <th>Description</th>
+          <th style="width:160px">Reference</th>
+          <th style="width:130px">Debit (–)</th>
+          <th style="width:130px">Credit (+)</th>
+          <th style="width:140px">Balance</th>
+          <th style="width:220px">Notes</th>
+          <th style="width:60px"></th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+      <tfoot>
+        <tr class="total">
+          <td></td><td><strong>Totals</strong></td><td></td>
+          <td class="num" id="totDebit">$0.00</td>
+          <td class="num" id="totCredit">$0.00</td>
+          <td class="num" id="endBal">$0.00</td>
+          <td colspan="2"></td>
+        </tr>
+      </tfoot>
+    </table>
+    <p class="note">Balance = prior balance, minus debit, plus credit. Enter opening balance on the first line as a Credit, for example 1500.00.</p>
+  </section>
+
+  <section id="recon" class="panel" hidden>
+    <div class="grid">
+      <div class="panel" style="background:#101634">
+        <h3 style="margin-top:0">Bank Reconciliation</h3>
+        <div class="row"><label>Bank statement balance <input id="bankBal" type="number" step="0.01" inputmode="decimal" placeholder="0.00"></label></div>
+        <div class="row"><label>Outstanding deposits <input id="outDep" type="number" step="0.01" inputmode="decimal" placeholder="0.00"></label></div>
+        <div class="row"><label>Outstanding checks <input id="outChk" type="number" step="0.01" inputmode="decimal" placeholder="0.00"></label></div>
+        <hr style="border:0;border-top:1px solid var(--border);margin:12px 0">
+        <div class="row"><span>Adjusted bank balance</span><span class="right" id="adjBank">$0.00</span></div>
+        <div class="row"><span>Total of property ledger</span><span class="right" id="ledgerTotal">$0.00</span></div>
+        <div class="row"><span>Difference</span><span class="right badge" id="diffBadge">$0.00</span></div>
+        <p class="note">Target is a difference of $0.00, if not zero, recheck entries, dates, and outstanding items.</p>
+      </div>
+
+      <div class="panel" style="background:#101634">
+        <h3 style="margin-top:0">Owner, Property Snapshot</h3>
+        <div class="row"><span>Property</span><span class="right" id="ovProp">—</span></div>
+        <div class="row"><span>Owner</span><span class="right" id="ovOwner">—</span></div>
+        <div class="row"><span>Period</span><span class="right" id="ovMonth">—</span></div>
+        <hr style="border:0;border-top:1px solid var(--border);margin:12px 0">
+        <div class="row"><span>Total debits this period</span><span class="right" id="ovDeb">$0.00</span></div>
+        <div class="row"><span>Total credits this period</span><span class="right" id="ovCred">$0.00</span></div>
+        <div class="row"><span>Ending balance</span><span class="right" id="ovEnd">$0.00</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="overview" class="panel" hidden>
+    <h3 style="margin-top:0">Master Overview</h3>
+    <div class="row"><span>Current ending balance</span><span class="right" id="moEnd">$0.00</span></div>
+    <div class="row"><span>Total debits this period</span><span class="right" id="moDeb">$0.00</span></div>
+    <div class="row"><span>Total credits this period</span><span class="right" id="moCred">$0.00</span></div>
+  </section>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const money = n => (Number.isFinite(n) ? n.toLocaleString('en-US',{style:'currency',currency:'USD'}) : '$0.00');
+const num = v => { const n = parseFloat(v); return Number.isFinite(n) ? n : 0; };
+
+const s = {
+  prop: $('#prop'), owner: $('#owner'), month: $('#month'),
+  bankBal: $('#bankBal'), outDep: $('#outDep'), outChk: $('#outChk'),
+  tbody: $('#tbl tbody'), totDebit: $('#totDebit'), totCredit: $('#totCredit'), endBal: $('#endBal'),
+  adjBank: $('#adjBank'), ledgerTotal: $('#ledgerTotal'), diffBadge: $('#diffBadge'),
+  ovProp: $('#ovProp'), ovOwner: $('#ovOwner'), ovMonth: $('#ovMonth'), ovDeb: $('#ovDeb'), ovCred: $('#ovCred'), ovEnd: $('#ovEnd'),
+  moEnd: $('#moEnd'), moDeb: $('#moDeb'), moCred: $('#moCred')
+};
+
+function save(){
+  const rows = $$('#tbl tbody tr').map(tr => {
+    const [date, desc, ref, deb, cred, , notes] = tr.querySelectorAll('input, .bal, textarea');
+    return { date: date.value, desc: desc.value, ref: ref.value, debit: deb.value, credit: cred.value, notes: notes.value };
+  });
+  localStorage.setItem('trust_ledger_v1', JSON.stringify({
+    meta:{prop:s.prop.value, owner:s.owner.value, month:s.month.value},
+    bank:{bankBal:s.bankBal.value, outDep:s.outDep.value, outChk:s.outChk.value},
+    rows
+  }));
+}
+
+function load(){
+  const raw = localStorage.getItem('trust_ledger_v1');
+  if(!raw){ seed(); return; }
+  try{
+    const data = JSON.parse(raw);
+    s.prop.value = data.meta?.prop || '';
+    s.owner.value = data.meta?.owner || '';
+    s.month.value = data.meta?.month || '';
+    s.bankBal.value = data.bank?.bankBal || '';
+    s.outDep.value = data.bank?.outDep || '';
+    s.outChk.value = data.bank?.outChk || '';
+    s.tbody.innerHTML = '';
+    (data.rows || []).forEach(addRow);
+  }catch{ seed(); }
+  recalc();
+}
+
+function seed(){
+  s.tbody.innerHTML = '';
+  addRow({date:'2025-08-01', desc:'Opening Balance (Owner Reserve)', ref:'', debit:'', credit:'1500', notes:'Carryover from prior month'});
+  addRow({date:'2025-08-03', desc:'Rent Received - Tenant Johnson', ref:'R#3052', debit:'', credit:'2500', notes:'August rent'});
+  addRow({date:'2025-08-04', desc:'Management Fee (10%)', ref:'INV#2025-081', debit:'250', credit:'', notes:'PM fee transfer'});
+  addRow({date:'2025-08-05', desc:'Maintenance - HVAC Repair', ref:'Bill#9483', debit:'450', credit:'', notes:'ABC HVAC, check #2185'});
+  addRow({date:'2025-08-06', desc:'Owner Distribution', ref:'EFT#0815', debit:'3000', credit:'', notes:'Owner draw'});
+  addRow({date:'2025-08-20', desc:'Tenant Late Fee', ref:'R#3060', debit:'', credit:'75', notes:'Applied to tenant'});
+  addRow({date:'2025-08-25', desc:'Landscaping', ref:'Bill#9490', debit:'150', credit:'', notes:'Green Leaf'});
+  addRow({date:'2025-08-31', desc:'Interest Income', ref:'BANK', debit:'', credit:'2.25', notes:'Monthly interest'});
+  s.prop.value = '123 Main St, San Diego'; s.owner.value = 'Smith Holdings LLC'; s.month.value = '2025-08';
+  s.bankBal.value = ''; s.outDep.value = ''; s.outChk.value = '';
+  recalc(); save();
+}
+
+function addRow(data={}){
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="date" value="${data.date||''}"></td>
+    <td><input placeholder="Description" value="${data.desc||''}"></td>
+    <td><input placeholder="Reference" value="${data.ref||''}"></td>
+    <td class="num"><input type="number" step="0.01" inputmode="decimal" value="${data.debit||''}"></td>
+    <td class="num"><input type="number" step="0.01" inputmode="decimal" value="${data.credit||''}"></td>
+    <td class="num bal">$0.00</td>
+    <td><textarea rows="1" placeholder="Notes">${data.notes||''}</textarea></td>
+    <td><button class="del">✕</button></td>`;
+  s.tbody.appendChild(tr);
+  tr.addEventListener('input', recalc);
+  tr.querySelector('.del').addEventListener('click', () => { tr.remove(); recalc(); });
+}
+
+function recalc(){
+  let bal = 0, tDeb = 0, tCred = 0;
+  $$('#tbl tbody tr').forEach((tr, idx) => {
+    const inputs = tr.querySelectorAll('input,textarea');
+    const debit = parseFloat(inputs[3].value) || 0;
+    const credit = parseFloat(inputs[4].value) || 0;
+    bal = (idx===0 && credit>0 && debit===0) ? credit : bal - debit + credit;
+    tr.querySelector('.bal').textContent = money(bal);
+    tDeb += debit; tCred += credit;
+  });
+  s.totDebit.textContent = money(tDeb);
+  s.totCredit.textContent = money(tCred);
+  s.endBal.textContent = money(bal);
+
+  s.ovProp.textContent = s.prop.value || '—';
+  s.ovOwner.textContent = s.owner.value || '—';
+  s.ovMonth.textContent = s.month.value || '—';
+  s.ovDeb.textContent = money(tDeb);
+  s.ovCred.textContent = money(tCred);
+  s.ovEnd.textContent = money(bal);
+
+  s.moDeb.textContent = money(tDeb);
+  s.moCred.textContent = money(tCred);
+  s.moEnd.textContent = money(bal);
+
+  const adj = (parseFloat(s.bankBal.value)||0) + (parseFloat(s.outDep.value)||0) - (parseFloat(s.outChk.value)||0);
+  $('#adjBank').textContent = money(adj);
+  $('#ledgerTotal').textContent = money(bal);
+  const diff = adj - bal;
+  const badge = $('#diffBadge');
+  badge.textContent = money(diff);
+  badge.className = 'badge ' + (Math.abs(diff) < 0.005 ? 'ok' : 'err');
+
+  save();
+}
+
+function exportCsv(){
+  const rows = [
+    ['Property', s.prop.value], ['Owner', s.owner.value], ['Month', s.month.value], [],
+    ['Date','Description','Reference','Debit','Credit','Balance','Notes']
+  ];
+  let bal = 0;
+  $$('#tbl tbody tr').forEach((tr, idx) => {
+    const [date,desc,ref,deb,cred,balCell,notes] = tr.querySelectorAll('input, .bal, textarea');
+    const d = parseFloat(deb.value)||0, c = parseFloat(cred.value)||0;
+    bal = (idx===0 && c>0 && d===0) ? c : bal - d + c;
+    rows.push([date.value, desc.value, ref.value, d||'', c||'', bal, notes.value]);
+  });
+  rows.push([], ['Reconciliation'],
+    ['Bank statement balance', parseFloat(s.bankBal.value)||0],
+    ['Outstanding deposits', parseFloat(s.outDep.value)||0],
+    ['Outstanding checks', parseFloat(s.outChk.value)||0],
+    ['Adjusted bank balance', (parseFloat(s.bankBal.value)||0)+(parseFloat(s.outDep.value)||0)-(parseFloat(s.outChk.value)||0)],
+    ['Ledger total', parseFloat((s.moEnd.textContent||'').replace(/[^0-9.-]/g,''))||0],
+    ['Difference', ((parseFloat(s.bankBal.value)||0)+(parseFloat(s.outDep.value)||0)-(parseFloat(s.outChk.value)||0)) - (parseFloat((s.moEnd.textContent||'').replace(/[^0-9.-]/g,''))||0)]
+  );
+  const csv = rows.map(r => r.map(v => {
+    const val = (v===null||v===undefined) ? '' : String(v);
+    return /[",\n]/.test(val) ? `"${val.replace(/"/g,'""')}"` : val;
+  }).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'trust_ledger.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+$('#addRow').addEventListener('click', () => { addRow({}); recalc(); });
+$('#exportCsv').addEventListener('click', exportCsv);
+$('#resetAll').addEventListener('click', () => {
+  if(!confirm('Clear all data? This will remove local entries.')) return;
+  localStorage.removeItem('trust_ledger_v1'); seed();
+});
+['prop','owner','month','bankBal','outDep','outChk'].forEach(id => {
+  document.getElementById(id).addEventListener('input', recalc);
+});
+$$('.tab').forEach(t => t.addEventListener('click', () => {
+  $$('.tab').forEach(x => x.classList.remove('active'));
+  t.classList.add('active');
+  const name = t.dataset.tab;
+  document.querySelectorAll('section.panel').forEach(sec => sec.hidden = true);
+  document.getElementById(name).hidden = false;
+}));
+
+load();
+</script>
+</body>
+</html>
